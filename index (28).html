@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Barishal Basa Finder | বরিশালের ভাড়ার বাসা</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-white: #ffffff;
+            --bg-light: #f0fdf4;
+            --primary-blue: #2563eb;
+            --light-green: #16a34a;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --border: #e5e7eb;
+        }
+
+        body.dark {
+            --bg-white: #111827;
+            --bg-light: #1f2937;
+            --text-dark: #f9fafb;
+            --text-gray: #9ca3af;
+            --border: #374151;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 15px 20px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .dark-toggle {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #dbeafe, #dcfce7);
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 30px auto 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-box input, .search-box select {
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .search-box button {
+            padding: 12px 25px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .cat-btn {
+            padding: 8px 20px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .cat-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* Cards Grid */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: var(--bg-white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 18px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--light-green);
+        }
+
+        .location {
+            color: var(--text-gray);
+            margin: 8px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .btn-wa {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-detail {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Admin Form */
+        .admin-form {
+            background: var(--bg-white);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-white);
+            color: var(--text-dark);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            max-width: 500px;
+            background: var(--bg-white);
+            margin: 50px auto;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .modal img {
+            width: 100%;
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-white);
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        /* Scroll Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-blue);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            display: none;
+        }
+
+        .scroll-top.show {
+            display: flex;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding: 20px 0;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .hero h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-container">
+        <div class="logo">🏠 Barishal Basa Finder</div>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">হোম</a></li>
+            <li><a href="#categories">ক্যাটাগরি</a></li>
+            <li><a href="#post">পোস্ট দিন</a></li>
+            <li><a href="#contact">যোগাযোগ</a></li>
+        </ul>
+        <button class="dark-toggle" onclick="toggleDarkMode()">🌙 ডার্ক</button>
+    </div>
+</div>
+
+<section class="hero" id="home">
+    <h1>বরিশালে বাসা খুঁজুন সহজে</h1>
+    <p>১৩ নম্বর ওয়ার্ডের সব ভাড়ার বাসা এখন অনলাইনে</p>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="লোকেশন খুঁজুন..." value="ওয়ার্ড ১৩">
+        <select id="priceSelect">
+            <option value="all">সব মূল্য</option>
+            <option value="0-10000">১০,০০০ টাকা পর্যন্ত</option>
+            <option value="10000-20000">১০,০০০ - ২০,০০০ টাকা</option>
+            <option value="20000+">২০,০০০+ টাকা</option>
+        </select>
+        <button onclick="searchListings()">🔍 খুঁজুন</button>
+    </div>
+</section>
+
+<div class="container" id="categories">
+    <div class="categories" id="categoryList">
+        <button class="cat-btn active" data-cat="all">সব</button>
+        <button class="cat-btn" data-cat="Family Flat">পরিবার Flat</button>
+        <button class="cat-btn" data-cat="Bachelor">ব্যাচেলর</button>
+        <button class="cat-btn" data-cat="Hostel">হোস্টেল</button>
+        <button class="cat-btn" data-cat="Sublet">সাবলেট</button>
+        <button class="cat-btn" data-cat="Shop">দোকান</button>
+    </div>
+
+    <div class="listings-grid" id="listingsGrid"></div>
+
+    <div class="admin-form" id="post">
+        <h2>📢 নতুন পোস্ট করুন</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <input type="text" id="postTitle" placeholder="শিরোনাম" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="postPrice" placeholder="ভাড়া (৳)" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="postLocation" placeholder="লোকেশন" value="ওয়ার্ড ১৩, বরিশাল" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="postRooms" placeholder="রুম সংখ্যা" required>
+            </div>
+            <div class="form-group">
+                <select id="postCategory">
+                    <option value="Family Flat">পরিবার Flat</option>
+                    <option value="Bachelor">ব্যাচেলর</option>
+                    <option value="Hostel">হোস্টেল</option>
+                    <option value="Sublet">সাবলেট</option>
+                    <option value="Shop">দোকান</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <textarea id="postDesc" rows="2" placeholder="বিস্তারিত বিবরণ"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="text" id="postPhone" placeholder="ফোন নম্বর" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="postImage" placeholder="ছবির URL (ঐচ্ছিক)" value="https://picsum.photos/400/300?random=1">
+            </div>
+            <button type="submit" style="background: var(--light-green); color: white; padding: 12px; border: none; border-radius: 30px; width: 100%; font-size: 16px; cursor: pointer;">✅ পোস্ট করুন</button>
+        </form>
+    </div>
+</div>
+
+<footer id="contact">
+    <p>📘 Facebook: fb.com/barishalbasa</p>
+    <p>📞 ফোন: +880 1700 000 000</p>
+    <p>✉️ ইমেইল: info@barishalbasa.com</p>
+    <p>© 2025 Barishal Basa Finder - ১৩ নম্বর ওয়ার্ডের ভাড়ার বাসা</p>
+</footer>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️</div>
+
+<script>
+    // ডেমো ডাটা - বরিশাল ওয়ার্ড ১৩
+    let listings = [
+        {
+            id: 1,
+            title: "৩ বেডরুম সুন্দর ফ্ল্যাট",
+            price: 15000,
+            location: "ওয়ার্ড ১৩, বরিশাল",
+            rooms: "৩ বেডরুম, ২ বাথরুম",
+            type: "Family Flat",
+            phone: "01711123456",
+            image: "https://picsum.photos/400/300?random=101",
+            description: "গেস্ট রুম, ব্যালকনি, গ্যারেজ সহ। নিরাপদ এলাকা।"
+        },
+        {
+            id: 2,
+            title: "ব্যাচেলরদের জন্য রুম",
+            price: 5000,
+            location: "ওয়ার্ড ১৩, বটতলা রোড",
+            rooms: "১টি রুম",
+            type: "Bachelor",
+            phone: "01822123456",
+            image: "https://picsum.photos/400/300?random=102",
+            description: "ওয়াইফাই, ওয়াটার পিউরিফায়ার সহ। তড়িৎ বিল আলাদা।"
+        },
+        {
+            id: 3,
+            title: "স্টুডেন্ট হোস্টেল",
+            price: 3500,
+            location: "ওয়ার্ড ১৩, কলেজ রোড",
+            rooms: "ডরমেটরি (৪ বেড)",
+            type: "Hostel",
+            phone: "01933123456",
+            image: "https://picsum.photos/400/300?random=103",
+            description: "৩ বেলা খাবার, লন্ড্রি, সিসি ক্যামেরা।"
+        },
+        {
+            id: 4,
+            title: "ছোট দোকান ভাড়া",
+            price: 8000,
+            location: "ওয়ার্ড ১৩, মার্কেট এলাকা",
+            rooms: "২০০ বর্গফুট",
+            type: "Shop",
+            phone: "01555123456",
+            image: "https://picsum.photos/400/300?random=104",
+            description: "ফুটপাতের দোকান, চা-পানির ব্যবসার জন্য ভালো।"
+        },
+        {
+            id: 5,
+            title: "ফার্নিশড সাবলেট ফ্ল্যাট",
+            price: 12000,
+            location: "ওয়ার্ড ১৩, লেক সিটি",
+            rooms: "২ বেডরুম",
+            type: "Sublet",
+            phone: "01666123456",
+            image: "https://picsum.photos/400/300?random=105",
+            description: "স্বল্পমেয়াদী (৩ মাস), এসি, ফ্রিজ সহ।"
+        }
+    ];
+
+    let currentCat = "all";
+    let currentSearch = "ওয়ার্ড ১৩";
+    let currentPrice = "all";
+
+    function renderListings() {
+        let filtered = listings.filter(item => {
+            if (currentCat !== "all" && item.type !== currentCat) return false;
+            if (currentSearch && !item.location.toLowerCase().includes(currentSearch.toLowerCase())) return false;
+            if (currentPrice !== "all") {
+                if (currentPrice === "0-10000" && item.price > 10000) return false;
+                if (currentPrice === "10000-20000" && (item.price < 10000 || item.price > 20000)) return false;
+                if (currentPrice === "20000+" && item.price < 20000) return false;
+            }
+            return true;
+        });
+
+        const grid = document.getElementById("listingsGrid");
+        if (filtered.length === 0) {
+            grid.innerHTML = "<p style='text-align:center; grid-column:1/-1;'>😔 কোন বাসা/রুম পাওয়া যায়নি। পোস্ট যোগ করুন!</p>";
+            return;
+        }
+
+        grid.innerHTML = filtered.map(item => `
+            <div class="card">
+                <img src="${item.image}" alt="${item.title}" onerror="this.src='https://picsum.photos/400/300'">
+                <div class="card-content">
+                    <div class="price">৳${item.price.toLocaleString()}/মাস</div>
+                    <div class="location">📍 ${item.location}</div>
+                    <div>🛏️ ${item.rooms}</div>
+                    <div class="badge">${item.type}</div>
+                    <div class="btn-group">
+                        <button class="btn btn-wa" onclick="whatsappChat('${item.phone}')">💬 WhatsApp</button>
+                        <button class="btn btn-detail" onclick="showDetails(${item.id})">🔍 বিস্তারিত</button>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function whatsappChat(phone) {
+        window.open(`https://wa.me/${phone}?text=আমি Barishal Basa Finder এ ভাড়ার বাসা দেখে যোগাযোগ করছি`, '_blank');
+    }
+
+    function showDetails(id) {
+        const item = listings.find(l => l.id === id);
+        if (!item) return;
+        
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span style="float: right; font-size: 28px; cursor: pointer;" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                <h2>${item.title}</h2>
+                <img src="${item.image}" alt="house">
+                <p><strong>💰 ভাড়া:</strong> ৳${item.price.toLocaleString()}</p>
+                <p><strong>📍 লোকেশন:</strong> ${item.location}</p>
+                <p><strong>🛏️ রুম:</strong> ${item.rooms}</p>
+                <p><strong>📋 বিবরণ:</strong> ${item.description}</p>
+                <p><strong>📞 ফোন:</strong> ${item.phone}</p>
+                <p><strong>🗺️ গুগল ম্যাপ:</strong> ওয়ার্ড ১৩, বরিশাল (মূল অবস্থান)</p>
+                <button class="btn btn-wa" style="width:100%; margin-top:15px;" onclick="whatsappChat('${item.phone}')">WhatsApp এ যোগাযোগ করুন</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.style.display = "block";
+        modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+    }
+
+    function searchListings() {
+        currentSearch = document.getElementById("searchInput").value;
+        currentPrice = document.getElementById("priceSelect").value;
+        renderListings();
+    }
+
+    // ক্যাটাগরি ফিল্টার
+    document.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            currentCat = this.getAttribute("data-cat");
+            renderListings();
+        });
+    });
+
+    // ফর্ম সাবমিট
+    document.getElementById("uploadForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const newListing = {
+            id: listings.length + 1,
+            title: document.getElementById("postTitle").value,
+            price: parseInt(document.getElementById("postPrice").value),
+            location: document.getElementById("postLocation").value,
+            rooms: document.getElementById("postRooms").value,
+            type: document.getElementById("postCategory").value,
+            phone: document.getElementById("postPhone").value,
+            image: document.getElementById("postImage").value || "https://picsum.photos/400/300?random=" + Date.now(),
+            description: document.getElementById("postDesc").value || "বিস্তারিত জানতে কল করুন।"
+        };
+        
+        listings.unshift(newListing);
+        renderListings();
+        this.reset();
+        alert("✅ আপনার পোস্ট সফলভাবে যোগ করা হয়েছে!");
+    });
+
+    // ডার্ক মোড
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark");
+    }
+
+    // হামবার্গার মেনু
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("active");
+    }
+
+    // স্ক্রল টপ বাটন
+    window.onscroll = function() {
+        const btn = document.getElementById("scrollTop");
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            btn.classList.add("show");
+        } else {
+            btn.classList.remove("show");
+        }
+    };
+
+    // পেজ লোডে রেন্ডার
+    renderListings();
+</script>
+</body>
+</html>
